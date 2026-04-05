@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # هاد عشان تقدر تشغله يدوياً بضغط زر
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,12 +25,15 @@ jobs:
           channel: 'stable'
 
       - name: Fix Android Project Structure
-        run: |
-          # هاد السطر بيصلح أي نقص في ملفات الأندرويد يدوياً
-          flutter create . --platforms android
+        run: flutter create . --platforms android
 
       - name: Install dependencies
         run: flutter pub get
+
+      - name: Generate App Icons
+        run: |
+          # بيحاول يصنع الأيقونات، إذا ما لقى الصورة بيكمل عادي بدون خطأ
+          flutter pub run flutter_launcher_icons || echo "Icons skipped"
 
       - name: Build APK
         run: flutter build apk --release --no-tree-shake-icons
@@ -40,4 +43,3 @@ jobs:
         with:
           name: Mushaf-App-Release
           path: build/app/outputs/flutter-apk/app-release.apk
-
