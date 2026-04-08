@@ -11,10 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.1
-  geolocator: ^10.1.1       # ضفنا هاي عشان تحديد الموقع
-  shared_preferences: ^2.2.2 # ضفنا هاي عشان حفظ البيانات
-  intl: ^0.18.1             # ضفنا هاي عشان التواريخ
-  audio_session: ^0.1.18    # ضفنا هاي عشان الصوت
+  geolocator: ^10.1.1
+  shared_preferences: ^2.2.2
+  intl: ^0.18.1
+  audio_session: ^0.1.18
+  provider: ^6.1.1       # هذه المكتبة اللي كانت ناقصة في الصورة الأخيرة
+  path_provider: ^2.1.2  # احتياطاً لأن معظم تطبيقات المصحف بتحتاجها
+  cached_network_image: ^3.3.1 # احتياطاً للصور
 
 dev_dependencies:
   flutter_test:
