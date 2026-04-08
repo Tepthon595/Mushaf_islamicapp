@@ -1,3 +1,4 @@
+// lib/screens/tasbih_screen.dart
 import 'package:flutter/material.dart';
 
 class TasbihScreen extends StatefulWidget {
@@ -8,30 +9,44 @@ class TasbihScreen extends StatefulWidget {
 }
 
 class _TasbihScreenState extends State<TasbihScreen> {
-  int _counter = 0;
-  String _currentZikr = "سبحان الله";
+  int count = 0;
+  int target = 33;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(_currentZikr, style: const TextStyle(fontSize: 30, color: Color(0xFFC9A84C))),
-        const SizedBox(height: 50),
-        GestureDetector(
-          onTap: () => setState(() => _counter++),
-          child: Container(
-            width: 200, height: 200,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFFC9A84C), width: 5),
-            ),
-            child: Center(child: Text('$_counter', style: const TextStyle(fontSize: 50))),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DropdownButton<int>(
+            value: target,
+            items: [33, 99, 1000].map((e) => DropdownMenuItem(value: e, child: Text("الهدف: $e"))).toList(),
+            onChanged: (v) => setState(() => target = v!),
           ),
-        ),
-        TextButton(onPressed: () => setState(() => _counter = 0), child: const Text("تصفير")),
-      ],
+          const SizedBox(height: 40),
+          GestureDetector(
+            onTap: () => setState(() {
+              if (count < target) count++;
+              else count = 0; // Reset or vibrate
+            }),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 250, height: 250,
+                  child: CircularProgressIndicator(
+                    value: count / target,
+                    strokeWidth: 8,
+                    color: const Color(0xFFC9A84C),
+                  ),
+                ),
+                Text("$count", style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: () => setState(() => count = 0)),
+        ],
+      ),
     );
   }
 }
-
