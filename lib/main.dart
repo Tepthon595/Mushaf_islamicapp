@@ -1,11 +1,12 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/quran/surah_list_screen.dart';
+import 'screens/azkar_screen.dart';
+import 'screens/tasbih_screen.dart';
+import 'screens/prayer_screen.dart';
+import 'screens/asma_screen.dart';
+import 'screens/settings_screen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const QuranApp());
-}
+void main() => runApp(const QuranApp());
 
 class QuranApp extends StatelessWidget {
   const QuranApp({super.key});
@@ -14,55 +15,88 @@ class QuranApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'مصحف المطور',
-      theme: ThemeData(
+      themeMode: ThemeMode.dark, // الافتراضي كما في HTML
+      darkTheme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: const Color(0xFFC9A84C),
         scaffoldBackgroundColor: const Color(0xFF080808),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF111111),
-          selectedItemColor: Color(0xFFC9A84C),
-          unselectedItemColor: Colors.grey,
+        fontFamily: 'Cairo',
+        appBarTheme: const AppBarTheme(backgroundColor: Color(0xFF111111), elevation: 0),
+        colorScheme: const ColorScheme.dark(primary: Color(0xFFC9A84C)),
+      ),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainNavigation()));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.menu_book_rounded, size: 100, color: Color(0xFFC9A84C)),
+            SizedBox(height: 20),
+            Text("مصحف", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFFC9A84C))),
+          ],
         ),
       ),
-      home: const MainNavigation(),
     );
   }
 }
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
-
   @override
   State<MainNavigation> createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = [
-    const QuranListScreen(),      // شاشة القرآن
-    const AzkarScreen(),          // شاشة الأذكار
-    const TasbihScreen(),         // شاشة التسبيح
-    const PrayerTimesScreen(),    // شاشة مواقيت الصلاة
-    const AsmaAlHusnaScreen(),    // شاشة أسماء الله الحسنى
+  int _index = 0;
+  final _screens = [
+    const SurahListScreen(),
+    const AzkarScreen(),
+    const TasbihScreen(),
+    const PrayerScreen(),
+    const AsmaAlHusnaScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
+      body: IndexedStack(index: _index, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        currentIndex: _index,
+        onTap: (i) => setState(() => _index = i),
         type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF111111),
+        selectedItemColor: const Color(0xFFC9A84C),
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'القرآن'),
-          BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'الأذكار'),
-          BottomNavigationBarItem(icon: Icon(Icons.fingerprint), label: 'تسبيح'),
-          BottomNavigationBarItem(icon: Icon(Icons.access_time), label: 'الصلاة'),
-          BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: 'الأسماء'),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: "قرآن"),
+          BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: "أذكار"),
+          BottomNavigationBarItem(icon: Icon(Icons.fingerprint), label: "تسابيح"),
+          BottomNavigationBarItem(icon: Icon(Icons.access_time), label: "صلاة"),
+          BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: "أسماء"),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.settings),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
       ),
     );
   }
