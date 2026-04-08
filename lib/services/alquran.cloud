@@ -1,0 +1,24 @@
+// lib/services/quran_api_service.dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class QuranApiService {
+  static const String baseUrl = "https://api.alquran.cloud/v1";
+
+  // جلب السورة كاملة مع الصوت والترجمة
+  static Future<Map<String, dynamic>> getSurahDetail(int surahNumber, String reciter, String lang) async {
+    // نجلب الآيات العربية أولاً
+    final response = await http.get(Uri.parse('$baseUrl/surah/$surahNumber/$reciter'));
+    // نجلب الترجمة (مثال: الإنجليزية أو الأوردو)
+    final transResponse = await http.get(Uri.parse('$baseUrl/surah/$surahNumber/en.ahmedali'));
+
+    if (response.statusCode == 200) {
+      return {
+        "arabic": json.decode(response.body)['data']['ayahs'],
+        "translation": json.decode(transResponse.body)['data']['ayahs']
+      };
+    }
+    throw Exception("Failed to load surah");
+  }
+}
+
