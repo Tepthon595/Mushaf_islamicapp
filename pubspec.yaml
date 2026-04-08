@@ -1,6 +1,6 @@
 name: quran_app
 description: A complete Islamic Quran application converted from HTML.
-version: 1.0.0+1
+version: 1.0.0+3
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
